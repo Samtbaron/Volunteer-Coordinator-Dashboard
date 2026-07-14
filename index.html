@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer Coordinator Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <div class="masthead__title">
+      <p class="eyebrow">Field roster &amp; intake log</p>
+      <h1>Volunteer Coordinator Dashboard</h1>
+      <p class="masthead__subtitle">One schedule, two views — volunteers get their shifts and answers, organizers get the roster health check.</p>
+    </div>
+
+    <div class="intake">
+      <input type="file" id="csv-upload" accept=".csv" class="visually-hidden">
+      <label for="csv-upload" class="btn btn--primary">Upload roster CSV</label>
+      <button type="button" id="load-sample-btn" class="btn btn--secondary">Load sample roster</button>
+      <p class="intake__filename" id="upload-filename">No roster loaded yet</p>
+    </div>
+  </div>
+
+  <div class="view-switcher">
+    <span class="view-switcher__label">Viewing as</span>
+    <div class="view-nav" role="tablist" aria-label="Choose your view">
+      <button type="button" class="view-nav__btn is-active" data-view="volunteer" role="tab" aria-selected="true">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="6.2" r="3"/><path d="M3.6 16.8c1-3.6 3.8-5.6 6.4-5.6s5.4 2 6.4 5.6"/></svg>
+        Volunteer
+      </button>
+      <button type="button" class="view-nav__btn" data-view="organizer" role="tab" aria-selected="false">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="3.8" width="11" height="13" rx="1.5"/><rect x="7.5" y="2.2" width="5" height="2.8" rx="1"/><line x1="6.8" y1="9" x2="13.2" y2="9"/><line x1="6.8" y1="12.2" x2="13.2" y2="12.2"/></svg>
+        Organizer
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============================= VOLUNTEER VIEW ============================= -->
+  <div id="view-volunteer" class="view">
+
+    <section class="panel" id="lookup" aria-labelledby="lookup-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="lookup-heading">Find my shifts</p>
+        <h2 class="panel__title">Look up your schedule</h2>
+      </div>
+
+      <p class="quick-facts" id="quick-facts" hidden></p>
+
+      <form id="lookup-form" class="lookup-form">
+        <label for="lookup-input" class="visually-hidden">Your name</label>
+        <div class="lookup-form__field">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5"/><line x1="12.6" y1="12.6" x2="17" y2="17"/></svg>
+          <input type="text" id="lookup-input" placeholder="Type your name…" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn--primary">Find my shifts</button>
+      </form>
+
+      <div id="lookup-results"></div>
+    </section>
+
+    <section class="panel" id="volunteer-info" aria-labelledby="volunteer-info-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="volunteer-info-heading">Good to know</p>
+        <h2 class="panel__title">Before you arrive</h2>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.8S4.8 9.2 4.8 12.9a5.2 5.2 0 0010.4 0C15.2 9.2 10 2.8 10 2.8z"/></svg></div>
+          <p class="info-card__title">What to bring</p>
+          <p class="info-card__body">A refillable water bottle, closed-toe shoes, and weather-appropriate layers. Name tags and role gear are provided at check-in.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.2 3h4.8a1 1 0 011 1v4.8a1 1 0 01-.3.7l-7 7a1 1 0 01-1.4 0l-4.8-4.8a1 1 0 010-1.4l7-7a1 1 0 01.7-.3z"/><circle cx="12.5" cy="6.5" r="1.1"/></svg></div>
+          <p class="info-card__title">Dress code</p>
+          <p class="info-card__body">Closed-toe shoes and clothes you don't mind getting a little messy. We'll have volunteer T-shirts at check-in.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17.5S15.5 11.7 15.5 8a5.5 5.5 0 00-11 0c0 3.7 5.5 9.5 5.5 9.5z"/><circle cx="10" cy="8" r="2"/></svg></div>
+          <p class="info-card__title">Parking &amp; check-in</p>
+          <p class="info-card__body">Park in the North Parking Lot, then check in at the Info Booth at least 15 minutes before your shift starts.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.8 13.2a3.3 3.3 0 01.4-6.6 4.3 4.3 0 018.3 1.5 2.9 2.9 0 01-.5 5.1H5.8z"/></svg></div>
+          <p class="info-card__title">Weather &amp; cancellations</p>
+          <p class="info-card__body">Outdoor shifts run rain or shine unless there's a severe alert. If we cancel, you'll get a text at least 2 hours ahead.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.8" y="2.2" width="6.4" height="15.6" rx="2"/><line x1="9" y1="15" x2="11" y2="15"/></svg></div>
+          <p class="info-card__title">Day-of contact</p>
+          <p class="info-card__body">Running late or need to step away? Text the Volunteer Hotline at (555) 010-2938.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="chatbot" aria-labelledby="chatbot-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="chatbot-heading">Ask a question</p>
+        <h2 class="panel__title">Chat with the volunteer assistant</h2>
+      </div>
+
+      <div class="chat-log" id="chat-log" aria-live="polite"></div>
+
+      <div class="chip-row">
+        <button type="button" class="chip" data-question="Who is volunteering Saturday?">Who's on Saturday?</button>
+        <button type="button" class="chip" data-question="What should I bring?">What should I bring?</button>
+        <button type="button" class="chip" data-question="Where do I park?">Where do I park?</button>
+        <button type="button" class="chip" data-question="What time does Registration start?">Registration start time?</button>
+      </div>
+
+      <form id="chat-form" class="chat-form">
+        <label for="chat-input" class="visually-hidden">Ask a question about the schedule or event</label>
+        <input type="text" id="chat-input" placeholder="Ask about the schedule or event…" autocomplete="off">
+        <button type="submit" class="btn btn--primary">Ask</button>
+      </form>
+    </section>
+
+  </div>
+
+  <!-- ============================= ORGANIZER VIEW ============================= -->
+  <div id="view-organizer" class="view" hidden>
+
+    <section class="panel" id="validation-summary" aria-labelledby="validation-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="validation-heading">Validation report</p>
+        <h2 class="panel__title">Roster health check</h2>
+      </div>
+
+      <p class="panel__empty" id="validation-empty">Upload a CSV or load the sample roster to see a validation report here.</p>
+
+      <div class="validation-content" id="validation-content" hidden>
+        <div class="validation-content__top">
+          <div class="stamp" aria-hidden="false">
+            <span class="stamp__text" id="stamp-text">0 VALID · 0 FLAGGED</span>
+          </div>
+          <p class="source-label"><span id="source-label"></span></p>
+        </div>
+
+        <dl class="stat-line">
+          <div class="stat-line__item"><dt>Total rows</dt><dd id="stat-total">0</dd></div>
+          <div class="stat-line__item"><dt>Valid</dt><dd id="stat-valid">0</dd></div>
+          <div class="stat-line__item"><dt>Flagged</dt><dd id="stat-flagged">0</dd></div>
+          <div class="stat-line__item"><dt>Missing emails</dt><dd id="stat-missing-emails">0</dd></div>
+          <div class="stat-line__item"><dt>Duplicates</dt><dd id="stat-duplicates">0</dd></div>
+          <div class="stat-line__item"><dt>Invalid dates</dt><dd id="stat-invalid-dates">0</dd></div>
+          <div class="stat-line__item"><dt>Invalid times</dt><dd id="stat-invalid-times">0</dd></div>
+        </dl>
+
+        <details class="flagged-details">
+          <summary>Show flagged rows</summary>
+          <ul class="flagged-list" id="flagged-list"></ul>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel" id="dashboard" aria-labelledby="dashboard-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="dashboard-heading">Overview</p>
+        <h2 class="panel__title">At a glance</h2>
+      </div>
+
+      <p class="panel__empty" id="dashboard-empty">KPIs and charts will appear here once a roster is loaded.</p>
+
+      <div id="dashboard-content" hidden>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <p class="kpi-card__value" id="kpi-total-shifts">0</p>
+            <p class="kpi-card__label">Total shifts</p>
+          </div>
+          <div class="kpi-card">
+            <p class="kpi-card__value" id="kpi-unique-volunteers">0</p>
+            <p class="kpi-card__label">Unique volunteers</p>
+          </div>
+          <div class="kpi-card kpi-card--warn">
+            <p class="kpi-card__value" id="kpi-missing-emails">0</p>
+            <p class="kpi-card__label">Missing emails</p>
+          </div>
+          <div class="kpi-card kpi-card--warn">
+            <p class="kpi-card__value" id="kpi-duplicates">0</p>
+            <p class="kpi-card__label">Duplicate rows</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <p class="chart-card__title">Shifts by day</p>
+            <div class="chart-card__canvas-wrap"><canvas id="chart-by-day"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <p class="chart-card__title">Shifts by role</p>
+            <div class="chart-card__canvas-wrap"><canvas id="chart-by-role"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="reminders" aria-labelledby="reminders-heading">
+      <div class="panel__header">
+        <p class="eyebrow" id="reminders-heading">Reminder drafts</p>
+        <h2 class="panel__title">Send a nudge</h2>
+      </div>
+
+      <label for="reminder-shift-select" class="field-label">Choose a shift</label>
+      <select id="reminder-shift-select" disabled>
+        <option>No shifts loaded yet</option>
+      </select>
+
+      <button type="button" id="generate-reminder-btn" class="btn btn--secondary reminder-generate-btn">Generate draft</button>
+
+      <label for="reminder-output" class="field-label">Draft email</label>
+      <textarea id="reminder-output" rows="10" readonly placeholder="Your generated reminder will appear here."></textarea>
+
+      <button type="button" id="copy-reminder-btn" class="btn btn--ghost">Copy to clipboard</button>
+    </section>
+
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Static demo — runs entirely in your browser. No data is uploaded anywhere.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
