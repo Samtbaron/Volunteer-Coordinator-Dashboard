@@ -19,7 +19,16 @@ const AppState = {
     this.flaggedRows = flaggedRows;
     this.summary = summary;
     this.sourceLabel = sourceLabel;
-    this._listeners.forEach((fn) => fn(this));
+    // Each listener runs independently — one module throwing (e.g. the
+    // dashboard failing because a CDN script didn't load) must not stop the
+    // chatbot, reminders, or shift lookup from updating.
+    this._listeners.forEach((fn) => {
+      try {
+        fn(this);
+      } catch (err) {
+        console.error('AppState listener failed:', err);
+      }
+    });
   },
 };
 

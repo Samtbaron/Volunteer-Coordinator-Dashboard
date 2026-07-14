@@ -97,17 +97,19 @@ function initUpload() {
   });
 }
 
+async function loadSampleRoster() {
+  try {
+    const response = await fetch('sample-data/sample-roster.csv');
+    if (!response.ok) throw new Error('fetch failed');
+    const text = await response.text();
+    processCSVText(text, 'Sample roster');
+  } catch (err) {
+    showParseError('Could not load the sample roster. If you opened this file directly (file://), serve it over a local web server instead.');
+  }
+}
+
 function initSampleLoader() {
-  document.getElementById('load-sample-btn').addEventListener('click', async () => {
-    try {
-      const response = await fetch('sample-data/sample-roster.csv');
-      if (!response.ok) throw new Error('fetch failed');
-      const text = await response.text();
-      processCSVText(text, 'Sample roster');
-    } catch (err) {
-      showParseError('Could not load the sample roster. If you opened this file directly (file://), serve it over a local web server instead.');
-    }
-  });
+  document.getElementById('load-sample-btn').addEventListener('click', loadSampleRoster);
 }
 
 function appendChatMessage(role, text) {
@@ -172,6 +174,11 @@ function init() {
   initLookup();
   initChatUI();
   initViewRouter();
+
+  // Load the demo data automatically so a first-time visitor (e.g. someone
+  // following a portfolio link) sees the app fully populated without having
+  // to know to click "Load sample roster" first.
+  loadSampleRoster();
 }
 
 document.addEventListener('DOMContentLoaded', init);

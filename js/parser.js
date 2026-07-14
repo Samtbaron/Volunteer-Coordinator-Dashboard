@@ -35,7 +35,12 @@ function parseCSVLine(line) {
 }
 
 function parseCSV(text) {
-  const lines = text
+  // Excel exports CSVs with a leading UTF-8 byte-order mark (U+FEFF). It
+  // isn't whitespace, so .trim() won't strip it — left in place it merges
+  // into the first header and silently fails the required-column check.
+  const withoutBom = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+
+  const lines = withoutBom
     .split(/\r\n|\n|\r/)
     .filter((line) => line.trim().length > 0);
 

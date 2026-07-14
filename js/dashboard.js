@@ -40,7 +40,18 @@ function renderKPIs(state) {
   document.getElementById('kpi-duplicates').textContent = state.summary.duplicates;
 }
 
+// The Chart.js <script> tag loads from a CDN. If a viewer's network blocks it,
+// `Chart` is undefined — fail into a readable message instead of throwing.
+function chartLibraryUnavailable(canvasId) {
+  if (typeof Chart !== 'undefined') return false;
+  const canvas = document.getElementById(canvasId);
+  const wrap = canvas ? canvas.parentElement : null;
+  if (wrap) wrap.innerHTML = '<p class="chart-card__fallback">Chart couldn\'t load (a script from the CDN was blocked). The numbers above are still accurate.</p>';
+  return true;
+}
+
 function renderDayChart(rows) {
+  if (chartLibraryUnavailable('chart-by-day')) return;
   const entries = countByDay(rows);
   const ctx = document.getElementById('chart-by-day').getContext('2d');
 
@@ -72,6 +83,7 @@ function renderDayChart(rows) {
 }
 
 function renderRoleChart(rows) {
+  if (chartLibraryUnavailable('chart-by-role')) return;
   const entries = countByRole(rows);
   const ctx = document.getElementById('chart-by-role').getContext('2d');
   const palette = ['#2B5D45', '#E0932C', '#B5482F', '#5B7F9E', '#8A6A9E', '#C9A227', '#4E8B7A', '#9E5B3F'];

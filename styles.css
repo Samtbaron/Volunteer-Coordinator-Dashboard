@@ -626,6 +626,13 @@ main {
 
 .chart-card__canvas-wrap { height: 260px; position: relative; }
 
+.chart-card__fallback {
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+  margin: 0;
+  padding: var(--space-3) 0;
+}
+
 /* ============================================================
    Chatbot
    ============================================================ */
