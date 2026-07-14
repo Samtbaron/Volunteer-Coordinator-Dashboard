@@ -20,7 +20,7 @@ The app has two views, switched from the header — same data underneath, differ
 
 CSV dates and times are read in several common formats (`YYYY-MM-DD`, `MM/DD/YYYY`, `MM-DD-YYYY`, 24-hour or 12-hour time) and normalized automatically, so it tolerates real-world spreadsheet exports rather than requiring one exact format.
 
-A small fictional sample roster (`sample-data/sample-roster.csv`) is included and loads automatically on page load, so the app is fully populated the moment it's opened — no setup needed to see it working.
+A small fictional sample roster (`sample-data/sample-roster.csv`) is included and loads automatically on page load, so the app is fully populated the moment it's opened — no setup needed to see it working. A second, messier file (`sample-data/upload-demo-roster.csv`) is included for testing the **Upload roster CSV** button by hand — download it, then upload it, to see the validation report catch a byte-order-mark from Excel, a raw decimal time value from a misformatted time cell, an invalid date, a bad email, a missing email, and a duplicate row.
 
 ## Tech stack
 
@@ -41,7 +41,8 @@ python -m http.server 3000
 index.html
 styles.css
 sample-data/
-  sample-roster.csv       # fictional demo roster
+  sample-roster.csv       # fictional demo roster (loads automatically)
+  upload-demo-roster.csv  # messier test file for manually testing the upload button
 js/
   state.js                # shared in-memory store (pub/sub)
   parser.js                # CSV text -> row objects
