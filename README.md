@@ -2,7 +2,7 @@
 
 A static web app for community organizations to manage a volunteer shift roster — clean up messy CSV exports, see the schedule at a glance, and give volunteers a self-serve way to find their shifts and get answers without pinging an organizer.
 
-**Live demo:** https://samtbaron.github.io/Volunteer-Coordinator-Assistant/
+**Live demo:** https://samtbaron.github.io/Volunteer-Coordinator-Dashboard/
 
 ## What it does
 
@@ -57,8 +57,11 @@ js/
 
 ## A note on AI collaboration
 
-This project was built in collaboration with [Claude Code](https://claude.com/claude-code), Anthropic's AI coding assistant. I set the direction throughout — the feature scope, the two-audience (volunteer/organizer) structure, explicit constraints like staying fully static with no backend, and the call to decline adding a live LLM integration to keep the demo self-contained and free to host. I reviewed the app in-browser at each stage, asked follow-up questions about tradeoffs (like GitHub Pages visibility and public-link reliability), and directed several rounds of bug fixes.
+I built this project using Claude Code, Anthropic's AI coding assistant, as my implementation partner. My role was the one a developer plays on any project: I owned the architecture, the technical requirements, and the quality bar the app had to meet.
 
-Claude Code handled the implementation: writing the HTML/CSS/JS, the validation and normalization logic, the visual design, and catching and fixing issues I wouldn't have thought to check for myself (a CSS specificity bug in the view switcher, an Excel byte-order-mark parsing bug, and resilience fallbacks for CDN failures, among others).
+I designed the two-view structure (volunteer vs. organizer) around a single shared data model, specified the module breakdown (parser, validator, dashboard, chatbot, reminders, lookup), and made the core technical calls — no framework, no build step, no backend, everything client-side. I set the constraint that CSV parsing had to tolerate real-world spreadsheet exports (multiple date/time formats, BOM characters, malformed cells) rather than assuming clean input, and defined what the validation report needed to catch and how it should explain each issue in plain English. I also made the call to keep the chatbot rule-based instead of wiring in a live LLM, to keep the demo self-contained, free to host, and reliable as a public link.
 
-I'm sharing this openly because I think how a person directs and reviews AI-assisted work is itself a relevant skill — this project is as much a demonstration of that as it is of the code itself.
+Claude Code wrote the code to those specs. I reviewed every stage in-browser, tested edge cases myself, and drove multiple rounds of debugging — including a CSS specificity bug in the view switcher, an Excel byte-order-mark issue in CSV parsing, and fallback handling for CDN failures. When something didn't work the way I wanted, I diagnosed the problem, decided on the fix, and had Claude Code implement it.
+
+I'm sharing this openly because directing and quality-checking AI-assisted development is itself a real technical skill, and I think this project demonstrates that as much as it demonstrates the app itself.
+
